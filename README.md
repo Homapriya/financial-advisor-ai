@@ -14,14 +14,14 @@ The goal of Week 1 was to build a working system that:
 
 ## 📂 Project Structure
 
+```
 financial-advisor-ai/
 │
 ├── app.py
 ├── ocr.py
 ├── .gitignore
 └── README.md
-
----
+```
 
 ## 🔍 Features Implemented (Week 1)
 
