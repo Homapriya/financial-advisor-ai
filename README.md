@@ -51,3 +51,16 @@ financial-advisor-ai/
 ## 📌 Conclusion
 
 Week 1 successfully delivers a working expense extraction and advisory system.
+
+## Week 2 Progress
+
+During Week 2, the project was enhanced with additional financial analysis features.
+
+New improvements include:
+
+- Added monthly budget tracking
+- Implemented spending pattern analysis
+- Added category-wise pie chart visualization
+- Improved dashboard insights for better expense understanding
+
+These updates make the system more useful for monitoring spending habits and managing personal budgets.
