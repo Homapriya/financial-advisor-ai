@@ -64,3 +64,15 @@ New improvements include:
 - Improved dashboard insights for better expense understanding
 
 These updates make the system more useful for monitoring spending habits and managing personal budgets.
+
+
+## Week 3 Progress
+
+In Week 3, we enhanced the financial dashboard with additional analysis features.
+
+New features added:
+
+- Monthly budget tracking
+- Spending pattern analysis (highest spending category)
+- Pie chart visualization for category distribution
+- Improved financial insights for better expense monitoring
