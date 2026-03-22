@@ -3,13 +3,34 @@ import pandas as pd
 import re
 import matplotlib.pyplot as plt 
 from ocr import extract_text
+import sqlite3
 
 st.title("AI Financial Advisor & Expense Manager")
 
+#database setup
+conn = sqlite3.connect("expenses.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS expenses (
+    amount INTEGER,
+    category TEXT
+)
+""")
+
+conn.commit()
+
 #Initialize session state
 if "expenses" not in st.session_state:
-    st.session_state.expenses = []
-    
+
+    cursor.execute("SELECT * FROM expenses")
+
+    rows = cursor.fetchall()
+
+    st.session_state.expenses = [
+        {"Amount": r[0], "Category": r[1]}
+        for r in rows
+    ]
 #screenshot upload
 st.subheader("Upload Payment Screenshot")
 
@@ -57,6 +78,32 @@ category = st.selectbox("Select Category", ["Food", "Shopping", "Transport", "Ot
 if st.button("Add Expense"):
     st.session_state.expenses.append({"Amount": amount, "Category": category})
     st.success("Expense Added Successfully!")
+    
+# ======================
+# CSV UPLOAD (Week 4)
+# ======================
+
+st.subheader("Upload Bank Statement (CSV)")
+
+csv_file = st.file_uploader("Upload CSV file", type=["csv"])
+
+if csv_file:
+
+    csv_data = pd.read_csv(csv_file)
+
+    st.write("Uploaded Data")
+    st.dataframe(csv_data)
+
+    if st.button("Add CSV Expenses"):
+
+        for _, row in csv_data.iterrows():
+
+            st.session_state.expenses.append({
+                "Amount": row["Amount"],
+                "Category": row["Category"]
+            })
+
+        st.success("CSV Expenses Added!")
 
 # Show Expenses
 if st.session_state.expenses:
