@@ -76,3 +76,16 @@ New features added:
 - Spending pattern analysis (highest spending category)
 - Pie chart visualization for category distribution
 - Improved financial insights for better expense monitoring
+
+## Week 4 Progress
+
+In Week 4, we enhanced the system to handle real financial data and provide persistent storage.
+
+New features added:
+
+- CSV upload support for importing bank transactions
+- SQLite database integration for permanent expense storage
+- Ability to combine expenses from multiple sources (OCR, manual entry, CSV)
+- Improved financial dashboard with real-time updates
+
+These improvements make the system closer to a real-world financial advisor application.
