@@ -89,3 +89,9 @@ New features added:
 - Improved financial dashboard with real-time updates
 
 These improvements make the system closer to a real-world financial advisor application.
+
+## Week 5 Progress
+
+In Week 5, we enhanced the system with AI-based financial advice using dynamic spending analysis. We also improved the user interface and added a reset feature for better usability.
+
+The project is now a complete AI-driven financial advisor system.
