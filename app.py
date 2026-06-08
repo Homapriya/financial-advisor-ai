@@ -4,6 +4,7 @@ import re
 import matplotlib.pyplot as plt 
 from ocr import extract_text
 import sqlite3
+from chatbot import ask_chatbot
 
 def generate_advice(total, category_totals):
     advice = []
@@ -36,12 +37,28 @@ def generate_advice(total, category_totals):
 
 st.title("AI Financial Advisor & Expense Manager")
 
+try:
+    with open("current_user.txt", "r") as f:
+        username = f.read().strip()
+except:
+    username = "Guest"
+    
+st.write(f"👤 Logged in as: {username}")
+
+if st.button("🚪 Logout"):
+
+    with open("current_user.txt", "w") as f:
+        f.write("Guest")
+
+    st.success("Logged out successfully")
+
 #database setup
 conn = sqlite3.connect("expenses.db")
 cursor = conn.cursor()
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS expenses (
+    username TEXT,
     amount INTEGER,
     category TEXT
 )
@@ -59,12 +76,17 @@ if st.button("🔁 Reset All Expenses"):
 #Initialize session state
 if "expenses" not in st.session_state:
 
-    cursor.execute("SELECT * FROM expenses")
+    username = st.session_state.get("username", "Guest")
 
+    cursor.execute(
+        "SELECT * FROM expenses WHERE username=?",
+        (username,)
+    )
+    
     rows = cursor.fetchall()
 
     st.session_state.expenses = [
-        {"Amount": r[0], "Category": r[1]}
+        {"Amount": r[1], "Category": r[2]}
         for r in rows
     ]
 #screenshot upload
@@ -103,6 +125,13 @@ if uploaded_file:
                 "Amount": detected_amount,
                 "Category": detected_category
             })
+            
+            cursor.execute(
+                "INSERT INTO expenses VALUES (?, ?, ?)",
+                (username, detected_amount, detected_category)
+            )
+            
+            conn.commit()
             st.success("Expense Added from Screenshot!")
 
 #manual entry 
@@ -113,8 +142,14 @@ category = st.selectbox("Select Category", ["Food", "Shopping", "Transport", "Ot
 
 if st.button("Add Expense"):
     st.session_state.expenses.append({"Amount": amount, "Category": category})
+
+    cursor.execute(
+    "INSERT INTO expenses VALUES (?, ?, ?)",
+    (username, amount, category)
+    )
+    conn.commit()
+
     st.success("Expense Added Successfully!")
-    
 # ======================
 # CSV UPLOAD (Week 4)
 # ======================
@@ -138,10 +173,16 @@ if csv_file:
                 "Amount": row["Amount"],
                 "Category": row["Category"]
             })
+            
+            cursor.execute(
+                "INSERT INTO expenses VALUES (?, ?, ?)",
+                (username, row["Amount"], row["Category"])
+            )
+            
+        conn.commit()
 
         st.success("CSV Expenses Added!")
 
-# Show Expenses
 # Show Expenses
 if st.session_state.expenses:
 
@@ -171,6 +212,33 @@ if st.session_state.expenses:
 
         if total > budget:
             st.error("You have exceeded your monthly budget!")
+
+    # Savings Goal Tracker
+    st.subheader("🎯 Savings Goal")
+
+    savings_goal = st.number_input("Savings Goal (Rs)", min_value=0)
+
+    if savings_goal > 0:
+
+        saved = max(0, budget - total)
+
+        progress = min(saved / savings_goal, 1.0)
+
+        st.progress(progress)
+
+        st.write(f"Saved Rs {saved} out of Rs {savings_goal}")
+
+
+    # Expense Prediction
+
+    st.subheader("🔮 Expense Prediction")
+
+    avg_expense = df["Amount"].mean()
+
+    predicted_spending = avg_expense * len(df)
+
+    st.write(f"Estimated future spending: Rs {predicted_spending:.2f}")
+
 
     # Spending Insights
     highest_category = category_totals.idxmax()
@@ -209,3 +277,25 @@ if st.session_state.expenses:
 
     if total <= 10000 and total > 0:
         st.success("Your spending is under control. Keep it up!")
+        
+    
+    # AI Financial Chatbot
+    st.subheader("🤖 AI Financial Chatbot")
+
+    question = st.text_input("Ask any financial question")
+
+    if question:
+
+        prompt = f"""
+        You are a personal financial advisor.
+
+        User total spending: {total}
+        Highest spending category: {highest_category}
+
+        User question:
+        {question}
+        """
+
+        answer = ask_chatbot(prompt)
+
+        st.write(answer)

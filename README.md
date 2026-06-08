@@ -95,3 +95,69 @@ These improvements make the system closer to a real-world financial advisor appl
 In Week 5, we enhanced the system with AI-based financial advice using dynamic spending analysis. We also improved the user interface and added a reset feature for better usability.
 
 The project is now a complete AI-driven financial advisor system.
+
+## Week 6 Progress
+
+In Week 6, we enhanced the financial management capabilities of the system by introducing goal-based planning and predictive analysis.
+
+New features added:
+
+- Savings Goal Tracker
+- Savings Progress Visualization
+- Expense Prediction based on spending history
+- Improved financial dashboard design
+- Better user experience and navigation
+
+These features help users plan their savings and understand future spending trends.
+
+---
+
+## Week 7 Progress
+
+In Week 7, we implemented user authentication and personalized expense management.
+
+New features added:
+
+- User Registration System
+- User Login System
+- User Logout Functionality
+- User-specific expense storage
+- Persistent login using current user tracking
+- Improved database structure for multi-user support
+
+These enhancements make the application more secure and suitable for multiple users.
+
+---
+
+## Week 8 Progress
+
+In Week 8, we integrated Google Gemini AI to provide real-time financial assistance through a conversational chatbot.
+
+New features added:
+
+- Gemini AI API Integration
+- AI Financial Chatbot
+- Personalized financial question answering
+- Context-aware financial guidance
+- Error handling for AI service interruptions
+
+The chatbot allows users to ask financial questions and receive intelligent responses, making the system a complete AI-powered financial advisor.
+
+---
+
+# Final Project Outcome
+
+The AI Financial Advisor & Expense Manager successfully combines:
+
+- OCR-based expense extraction
+- Manual expense tracking
+- CSV transaction import
+- SQLite database storage
+- Budget monitoring
+- Savings goal tracking
+- Expense prediction
+- Financial analytics and visualization
+- User authentication
+- Gemini AI-powered chatbot
+
+The project provides a complete personal finance management solution that helps users track spending, manage budgets, improve savings habits, and receive AI-driven financial guidance.
