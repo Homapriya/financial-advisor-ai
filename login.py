@@ -64,6 +64,5 @@ elif choice == "Login":
             st.session_state["username"] = username
             st.success(f"Welcome {username}!")
             
-            st.switch_page("app.py")
         else:
             st.error("Invalid Username or Password")
