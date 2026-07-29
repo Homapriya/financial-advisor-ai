@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from ocr import extract_text
 import sqlite3
 from chatbot import ask_chatbot
+import os
+
 
 def generate_advice(total, category_totals):
     advice = []
@@ -37,20 +39,22 @@ def generate_advice(total, category_totals):
 
 st.title("AI Financial Advisor & Expense Manager")
 
-try:
-    with open("current_user.txt", "r") as f:
-        username = f.read().strip()
-except:
-    username = "Guest"
-    
+if "username" not in st.session_state:
+    st.session_state["username"] = None
+
+if st.session_state["username"] is None:
+    st.warning("Please login first.")
+    st.stop()
+
+username = st.session_state["username"]
+
 st.write(f"👤 Logged in as: {username}")
 
 if st.button("🚪 Logout"):
 
-    with open("current_user.txt", "w") as f:
-        f.write("Guest")
+    st.session_state["username"] = None
 
-    st.success("Logged out successfully")
+    st.switch_page("login.py")
 
 #database setup
 conn = sqlite3.connect("expenses.db")
@@ -69,7 +73,10 @@ conn.commit()
 # Reset Button
 if st.button("🔁 Reset All Expenses"):
     st.session_state.expenses = []
-    cursor.execute("DELETE FROM expenses")
+    cursor.execute(
+        "DELETE FROM expenses WHERE username=?",
+        (username,)
+    )
     conn.commit()
     st.success("All expenses cleared!")
 

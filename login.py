@@ -61,9 +61,9 @@ elif choice == "Login":
         result = cursor.fetchone()
 
         if result:
-            with open("current_user.txt", "w") as f:
-                f.write(username)
-                
+            st.session_state["username"] = username
             st.success(f"Welcome {username}!")
+            
+            st.switch_page("app.py")
         else:
             st.error("Invalid Username or Password")
