@@ -37,27 +37,90 @@ def generate_advice(total, category_totals):
 
     return advice
 
-st.title("AI Financial Advisor & Expense Manager")
+# ---------------- LOGIN ----------------
+
+conn = sqlite3.connect("expenses.db", check_same_thread=False)
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS users(
+    username TEXT PRIMARY KEY,
+    password TEXT
+)
+""")
+conn.commit()
 
 if "username" not in st.session_state:
-    st.session_state["username"] = None
+    st.session_state.username = None
 
-if st.session_state["username"] is None:
-    st.warning("Please login first.")
+if st.session_state.username is None:
+
+    st.title("🔐 AI Financial Advisor")
+
+    menu = st.sidebar.selectbox(
+        "Menu",
+        ["Login", "Register"]
+    )
+
+    if menu == "Register":
+
+        new_user = st.text_input("Username")
+        new_password = st.text_input("Password", type="password")
+
+        if st.button("Register"):
+
+            try:
+                cursor.execute(
+                    "INSERT INTO users VALUES (?,?)",
+                    (new_user, new_password)
+                )
+                conn.commit()
+                st.success("Registration Successful")
+
+            except sqlite3.IntegrityError:
+                st.error("Username already exists")
+
+    else:
+
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+
+        if st.button("Login"):
+
+            cursor.execute(
+                "SELECT * FROM users WHERE username=? AND password=?",
+                (username, password)
+            )
+
+            if cursor.fetchone():
+
+                st.session_state.username = username
+                st.rerun()
+
+            else:
+
+                st.error("Invalid Username or Password")
+
     st.stop()
 
-username = st.session_state["username"]
+username = st.session_state.username
+
+st.title("AI Financial Advisor & Expense Manager")
 
 st.write(f"👤 Logged in as: {username}")
 
 if st.button("🚪 Logout"):
 
-    st.session_state["username"] = None
+    st.session_state.username = None
 
-    st.switch_page("login.py")
+    if "expenses" in st.session_state:
+        del st.session_state["expenses"]
+
+    st.rerun()
 
 #database setup
-conn = sqlite3.connect("expenses.db")
+#database setup
+conn = sqlite3.connect("expenses.db", check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("""
